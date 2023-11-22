@@ -1,0 +1,5 @@
+.idea/
+.history/
+vendor/
+*.dll
+composer.lock
