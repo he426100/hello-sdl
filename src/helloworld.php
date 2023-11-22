@@ -37,11 +37,11 @@ class HelloSDL
         try {
             $this->init();
         } catch (\Throwable $e) {
-            $this->sdl->SDL_Log('Init faliled');
-            $this->sdl->SDL_Log($e->getMessage());
+            $this->log('Init faliled');
+            $this->log($e->getMessage());
             return -1;
         }
-        $this->sdl->SDL_Log('Init success');
+        $this->log('Init success');
 
         while (!$this->isQuit) {
             $this->renderScreen();
@@ -49,9 +49,9 @@ class HelloSDL
             $this->sdl->SDL_Delay(self::DELAY_TIME);
         }
         
-        $this->sdl->SDL_Log('Window is quit');
+        $this->log('Window is quit');
         $this->clean();
-        $this->sdl->SDL_Log('SDL quit');
+        $this->log('SDL quit');
         return 0;
     }
     
@@ -72,13 +72,13 @@ class HelloSDL
 
         $this->surface = $this->image->IMG_Load(ROOT_DIR . "/img/2.jpg");
         if (!$this->surface) {
-            $this->sdl->SDL_Log("img is not loaded");
+            $this->log("img is not loaded");
             throw new \Exception("2.jpg is not found");
         }
         $this->imgRect = $this->sdl->new('SDL_Rect');
         $this->texture = $this->sdl->SDL_CreateTextureFromSurface($this->renderer, $this->surface);
         $this->sdl->SDL_QueryTexture($this->texture, null, null, FFI::addr($this->imgRect->w), FFI::addr($this->imgRect->h));
-        $this->sdl->SDL_Log("the image width and height is: {$this->imgRect->w}, {$this->imgRect->h}");
+        $this->log("the image width and height is: {$this->imgRect->w}, {$this->imgRect->h}");
 
         $this->destRect = $this->imgRect;
         $this->destRect->x = $this->destRect->y = 0;
@@ -113,6 +113,15 @@ class HelloSDL
         $this->sdl->SDL_DestroyTexture($this->texture);
         $this->sdl->SDL_DestroyWindow($this->mainWindow);
         $this->sdl->SDL_Quit();
+    }
+
+    private function log(string $msg)
+    {
+        if ($this->sdl) {
+            $this->sdl->SDL_Log($msg);
+        } else {
+            echo $msg, PHP_EOL;
+        }
     }
 }
 
