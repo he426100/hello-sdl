@@ -1,6 +1,8 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+define('ROOT_DIR', __DIR__ . '/..');
+
+require ROOT_DIR . '/vendor/autoload.php';
 
 use Serafim\SDL\SDL;
 use Serafim\SDL\Image\Image;
@@ -22,6 +24,13 @@ class HelloSDL
     private $imgRect;
     private $destRect;
     private $isQuit;
+
+    public function __construct()
+    {
+        $this->sdl = new SDL(library: ROOT_DIR . '/lib/SDL2.dll');
+        $this->image = new Image(sdl: $this->sdl, library: ROOT_DIR . '/lib/SDL2_image.dll');
+        $this->event = $this->sdl->new('SDL_Event');
+    }
 
     public function run(): int
     {
@@ -48,10 +57,6 @@ class HelloSDL
     
     private function init(): void
     {
-        $this->sdl = new SDL();
-        $this->image = new Image();
-        $this->event = $this->sdl->new('SDL_Event');
-
         if ($this->sdl->SDL_Init(SDL::SDL_INIT_EVERYTHING) < 0) {
             throw new \Exception("SDL2 can't be init!");
         }
@@ -65,7 +70,7 @@ class HelloSDL
             throw new \Exception("Can't create renderer!");
         }
 
-        $this->surface = $this->image->IMG_Load("2.jpg");
+        $this->surface = $this->image->IMG_Load(ROOT_DIR . "/img/2.jpg");
         if (!$this->surface) {
             $this->sdl->SDL_Log("img is not loaded");
             throw new \Exception("2.jpg is not found");
