@@ -1,5 +1,6 @@
 .idea/
 .history/
 vendor/
-*.dll
+/lib
+/font
 composer.lock

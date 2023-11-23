@@ -3,6 +3,10 @@
         "serafim/ffi-sdl": "^2.0",
         "serafim/ffi-sdl-ttf": "^2.0",
         "serafim/ffi-sdl-image": "^2.0",
-        "serafim/ffi-sdl-mixer": "^2.0"
+        "serafim/ffi-sdl-mixer": "^2.0",
+        "ffi/var-dumper": "^1.0"
+    },
+    "require-dev": {
+        "ffi/ide-helper-generator": "^0.1.10"
     }
 }
