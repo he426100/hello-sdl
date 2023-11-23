@@ -5,4 +5,5 @@
 - [SDL2 游戏开发最小知识栈](https://meishizaolunzi.com/sdl2-you-xi-kai-fa-zui-xiao-zhi-shi-zhan/)
 
 ## 效果
-![1700637749070](https://github.com/he426100/hello-sdl/assets/9689137/65df8850-1e12-49cb-9f85-11ddb57724e9)
+![1700637749070](https://github.com/he426100/hello-sdl/assets/9689137/65df8850-1e12-49cb-9f85-11ddb57724e9)  
+![image](https://github.com/he426100/hello-sdl/assets/9689137/80b8e26b-a540-4282-bf62-be6dfd8fb25a)  
