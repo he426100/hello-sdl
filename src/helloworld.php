@@ -7,6 +7,9 @@ require ROOT_DIR . '/vendor/autoload.php';
 use Serafim\SDL\SDL;
 use Serafim\SDL\Image\Image;
 use Serafim\SDL\Event\Type;
+use Serafim\SDL\MessageBox\Flags;
+use Serafim\SDL\Keyboard\ScanCode;
+use Serafim\SDL\Keyboard\KeyMode;
 
 class HelloSDL
 {
@@ -95,6 +98,22 @@ class HelloSDL
         while ($this->sdl->SDL_PollEvent(FFI::addr($this->event))) {
             if ($this->event->type === Type::SDL_QUIT) {
                 $this->isQuit = true;
+            } elseif ($this->event->type === Type::SDL_MOUSEBUTTONDOWN) {
+                if (
+                    $this->event->button->x > 90 
+                    && $this->event->button->x < 200
+                    && $this->event->button->y > 200
+                ) {
+                    $this->sdl->SDL_ShowSimpleMessageBox(Flags::SDL_MESSAGEBOX_INFORMATION, 'Hello SDL', '大佬！', null);
+                }
+            } elseif ($this->event->type === Type::SDL_KEYDOWN) {
+                $key = $this->event->key->keysym->scancode;
+                $mod = $this->event->key->keysym->mod;
+
+                if ($key === ScanCode::SDL_SCANCODE_D && ($mod & KeyMode::KMOD_CTRL) !== 0) {
+                    $this->isQuit = true;
+                    $this->log('Ctrl + D was pressed');
+                }
             }
         }
     }
