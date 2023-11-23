@@ -7,6 +7,7 @@
         "ffi/var-dumper": "^1.0"
     },
     "require-dev": {
-        "ffi/ide-helper-generator": "^0.1.10"
+        "ffi/ide-helper-generator": "^0.1.10",
+        "psy/psysh": "^0.11.22"
     }
 }
