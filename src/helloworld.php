@@ -89,8 +89,8 @@ class HelloSDL
 
     private function renderScreen()
     {
-        $this->sdl->SDL_RenderClear($this->renderer);
         $this->sdl->SDL_SetRenderDrawColor($this->renderer, 0, 200, 0, 255);
+        $this->sdl->SDL_RenderClear($this->renderer);
     }
 
     private function handleEvent()
