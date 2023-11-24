@@ -88,6 +88,7 @@ while ($running) {
 
 $sdl->SDL_FreeSurface($surface);
 $sdl->SDL_DestroyTexture($texture);
+$sdl->SDL_DestroyRenderer($renderer);
 $sdl->SDL_DestroyWindow($window);
 $ttf->TTF_Quit();
 $sdl->SDL_Quit();
