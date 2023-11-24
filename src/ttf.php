@@ -55,9 +55,9 @@ $font = $ttf->TTF_OpenFont(ROOT_DIR . '/font/arial.ttf', 24);
 // }   . "\n";
 
 $color = $sdl->new('SDL_Color');
-$color->r = 200;
-$color->g = 0;
-$color->b = 0;
+$color->r = 0x0;
+$color->g = 0x8C;
+$color->b = 0xC8;
 
 $event = $sdl->new('SDL_Event');
 $running = true;
@@ -68,7 +68,7 @@ while ($running) {
             $running = false;
         }
     } else {
-        $surface = $ttf->TTF_RenderText_Solid($font, microdate('Y-m-d H:i:s'), FFI::addr($color));
+        $surface = $ttf->TTF_RenderText_Solid($font, microdate('Y-m-d H:i:s'), $color);
         $texture = $sdl->SDL_CreateTextureFromSurface($renderer, $surface);
 
         $rect = $sdl->new('SDL_Rect');
