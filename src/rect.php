@@ -42,7 +42,7 @@ if (!$renderer) {
     throw new \Exception("Can't create renderer!");
 }
 
-$font = $ttf->TTF_OpenFont(ROOT_DIR . '/font/arial.ttf', 16);
+$font = $ttf->TTF_OpenFont(ROOT_DIR . '/font/msyh.ttc', 24);
 $color = $sdl->new('SDL_Color');
 $color->r = 0x0;
 $color->g = 0x8C;
@@ -81,11 +81,17 @@ while ($running) {
         $sdl->SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255); // 长方形为白色
         $sdl->SDL_RenderFillRect($renderer, FFI::addr($rect));
 
-        $textSurface = $ttf->TTF_RenderText_Solid($font, 'H', $color); // 渲染文本
+        $textSurface = $ttf->TTF_RenderUTF8_Solid($font, '好', $color); // 渲染文本
         $textTexture = $sdl->SDL_CreateTextureFromSurface($renderer, $textSurface); // 从文本表面创建纹理
+
+        $textRect = $sdl->new('SDL_Rect');
+        $sdl->SDL_QueryTexture($textTexture, null, null, FFI::addr($textRect->w), FFI::addr($textRect->h));
+        $textRect->x = $rect->x + ($rect->w - $textRect->w) / 2;
+        $textRect->y = $rect->y + ($rect->h - $textRect->h) / 2;
+
         $sdl->SDL_FreeSurface($textSurface); // 释放文本表面
 
-        $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($rect)); // 拷贝文本纹理到长方形内
+        $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($textRect)); // 拷贝文本纹理到长方形内
         $sdl->SDL_DestroyTexture($textTexture); // 销毁文本纹理
 
         $sdl->SDL_SetRenderTarget($renderer, null); // 恢复默认，渲染目标为窗口
