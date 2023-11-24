@@ -14,6 +14,7 @@ require ROOT_DIR . '/vendor/autoload.php';
 use Serafim\SDL\SDL;
 use Serafim\SDL\TTF\TTF;
 use Serafim\SDL\Event\Type;
+use Serafim\SDL\MessageBox\Flags;
 
 const WINDOW_WIDTH = 300;
 const WINDOW_HEIGHT = 300;
@@ -67,41 +68,56 @@ while ($running) {
     if ($sdl->SDL_PollEvent(FFI::addr($event))) {
         if ($event->type === Type::SDL_QUIT) {
             $running = false;
+        } elseif ($event->type === Type::SDL_MOUSEBUTTONDOWN) {
+            $point = $sdl->new('SDL_Point');
+            $point->x = $event->button->x;
+            $point->y = $event->button->y;
+
+            // 无法使用 $sdl->SDL_PointInRect
+            if (SDL_PointInRect($point, $rect)) {
+                $sdl->SDL_ShowSimpleMessageBox(Flags::SDL_MESSAGEBOX_INFORMATION, 'Hello SDL', '干嘛？', null);
+            }
         }
-    } else {
-        if (!(time() % 5)) {
-            $rect->x = rand(0, WINDOW_WIDTH - $rect->w);
-            $rect->y = rand(0, WINDOW_HEIGHT - $rect->h);
-        }
-        $sdl->SDL_SetRenderTarget($renderer, $texture); // 设置渲染目标为纹理
-        $sdl->SDL_SetRenderDrawColor($renderer, 0, 0, 0, 0); // 纹理背景为黑色
-        $sdl->SDL_RenderClear($renderer); // 清屏
-
-        $sdl->SDL_RenderDrawRect($renderer, FFI::addr($rect)); // 绘制一个长方形
-        $sdl->SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255); // 长方形为白色
-        $sdl->SDL_RenderFillRect($renderer, FFI::addr($rect));
-
-        $textSurface = $ttf->TTF_RenderUTF8_Solid($font, '好', $color); // 渲染文本
-        $textTexture = $sdl->SDL_CreateTextureFromSurface($renderer, $textSurface); // 从文本表面创建纹理
-
-        $textRect = $sdl->new('SDL_Rect');
-        $sdl->SDL_QueryTexture($textTexture, null, null, FFI::addr($textRect->w), FFI::addr($textRect->h));
-        $textRect->x = $rect->x + ($rect->w - $textRect->w) / 2;
-        $textRect->y = $rect->y + ($rect->h - $textRect->h) / 2;
-
-        $sdl->SDL_FreeSurface($textSurface); // 释放文本表面
-
-        $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($textRect)); // 拷贝文本纹理到长方形内
-        $sdl->SDL_DestroyTexture($textTexture); // 销毁文本纹理
-
-        $sdl->SDL_SetRenderTarget($renderer, null); // 恢复默认，渲染目标为窗口
-        $sdl->SDL_RenderCopy($renderer, $texture, null, null); // 拷贝纹理到CPU
-
-        $sdl->SDL_RenderPresent($renderer); // 输出到目标窗口上
+        continue;
     }
+    if (!(time() % 5)) {
+        $rect->x = rand(0, WINDOW_WIDTH - $rect->w);
+        $rect->y = rand(0, WINDOW_HEIGHT - $rect->h);
+    }
+    $sdl->SDL_SetRenderTarget($renderer, $texture); // 设置渲染目标为纹理
+    $sdl->SDL_SetRenderDrawColor($renderer, 0, 0, 0, 0); // 纹理背景为黑色
+    $sdl->SDL_RenderClear($renderer); // 清屏
+
+    $sdl->SDL_RenderDrawRect($renderer, FFI::addr($rect)); // 绘制一个长方形
+    $sdl->SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255); // 长方形为白色
+    $sdl->SDL_RenderFillRect($renderer, FFI::addr($rect));
+
+    $textSurface = $ttf->TTF_RenderUTF8_Solid($font, '好', $color); // 渲染文本
+    $textTexture = $sdl->SDL_CreateTextureFromSurface($renderer, $textSurface); // 从文本表面创建纹理
+
+    $textRect = $sdl->new('SDL_Rect'); // 文字
+    $sdl->SDL_QueryTexture($textTexture, null, null, FFI::addr($textRect->w), FFI::addr($textRect->h));
+    $textRect->x = $rect->x + ($rect->w - $textRect->w) / 2;
+    $textRect->y = $rect->y + ($rect->h - $textRect->h) / 2;
+
+    $sdl->SDL_FreeSurface($textSurface); // 释放文本表面
+
+    $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($textRect)); // 拷贝文本纹理到长方形内
+    $sdl->SDL_DestroyTexture($textTexture); // 销毁文本纹理
+
+    $sdl->SDL_SetRenderTarget($renderer, null); // 恢复默认，渲染目标为窗口
+    $sdl->SDL_RenderCopy($renderer, $texture, null, null); // 拷贝纹理到CPU
+
+    $sdl->SDL_RenderPresent($renderer); // 输出到目标窗口上
 }
 
 $sdl->SDL_DestroyTexture($texture);
 $sdl->SDL_DestroyRenderer($renderer);
 $sdl->SDL_DestroyWindow($window);
 $sdl->SDL_Quit();
+
+function SDL_PointInRect($point, $rect)
+{
+    return (($point->x >= $rect->x) && ($point->x < ($rect->x + $rect->w)) &&
+        ($point->y >= $rect->y) && ($point->y < ($rect->y + $rect->h)));
+}
