@@ -72,27 +72,26 @@ while ($running) {
         if (!(time() % 5)) {
             $rect->x = rand(0, WINDOW_WIDTH - $rect->w);
             $rect->y = rand(0, WINDOW_HEIGHT - $rect->h);
-
-            $sdl->SDL_SetRenderTarget($renderer, $texture); // 设置渲染目标为纹理
-            $sdl->SDL_SetRenderDrawColor($renderer, 0, 0, 0, 0); // 纹理背景为黑色
-            $sdl->SDL_RenderClear($renderer); // 清屏
-
-            $sdl->SDL_RenderDrawRect($renderer, FFI::addr($rect)); // 绘制一个长方形
-            $sdl->SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255); // 长方形为白色
-            $sdl->SDL_RenderFillRect($renderer, FFI::addr($rect));
-
-            $textSurface = $ttf->TTF_RenderText_Solid($font, 'H', $color); // 渲染文本
-            $textTexture = $sdl->SDL_CreateTextureFromSurface($renderer, $textSurface); // 从文本表面创建纹理
-            $sdl->SDL_FreeSurface($textSurface); // 释放文本表面
-
-            $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($rect)); // 拷贝文本纹理到长方形内
-            $sdl->SDL_DestroyTexture($textTexture); // 销毁文本纹理
-
-            $sdl->SDL_SetRenderTarget($renderer, null); // 恢复默认，渲染目标为窗口
-            $sdl->SDL_RenderCopy($renderer, $texture, null, null); // 拷贝纹理到CPU
-
-            $sdl->SDL_RenderPresent($renderer); // 输出到目标窗口上
         }
+        $sdl->SDL_SetRenderTarget($renderer, $texture); // 设置渲染目标为纹理
+        $sdl->SDL_SetRenderDrawColor($renderer, 0, 0, 0, 0); // 纹理背景为黑色
+        $sdl->SDL_RenderClear($renderer); // 清屏
+
+        $sdl->SDL_RenderDrawRect($renderer, FFI::addr($rect)); // 绘制一个长方形
+        $sdl->SDL_SetRenderDrawColor($renderer, 255, 255, 255, 255); // 长方形为白色
+        $sdl->SDL_RenderFillRect($renderer, FFI::addr($rect));
+
+        $textSurface = $ttf->TTF_RenderText_Solid($font, 'H', $color); // 渲染文本
+        $textTexture = $sdl->SDL_CreateTextureFromSurface($renderer, $textSurface); // 从文本表面创建纹理
+        $sdl->SDL_FreeSurface($textSurface); // 释放文本表面
+
+        $sdl->SDL_RenderCopy($renderer, $textTexture, null, FFI::addr($rect)); // 拷贝文本纹理到长方形内
+        $sdl->SDL_DestroyTexture($textTexture); // 销毁文本纹理
+
+        $sdl->SDL_SetRenderTarget($renderer, null); // 恢复默认，渲染目标为窗口
+        $sdl->SDL_RenderCopy($renderer, $texture, null, null); // 拷贝纹理到CPU
+
+        $sdl->SDL_RenderPresent($renderer); // 输出到目标窗口上
     }
 }
 
